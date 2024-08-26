@@ -1,10 +1,9 @@
-import { Text, View } from "react-native";
+import { Stack } from "expo-router";
 
 export default function Layout() {
   return (
-    <View>
-      {/* Your layout components */}
-      <Text>this is root layout</Text>
-    </View>
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    </Stack>
   );
 }
