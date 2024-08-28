@@ -33,6 +33,12 @@
           "origin": "https://helliride.com/"
         }
       ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow helliRide to use your location."
+        }
+      ],
       "expo-secure-store"
     ],
     "experiments": {

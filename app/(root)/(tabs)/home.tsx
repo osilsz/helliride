@@ -2,14 +2,12 @@ import GoogleSearchInput from "@/components/googleSearchInput";
 import Map from "@/components/map";
 import RideCard from "@/components/rideCard";
 import { useSession } from "@/lib/ctx";
-import {
-  Pressable,
-  Text,
-  View,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
+import { useEffect, useState } from "react";
+import { Text, View, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as Location from "expo-location";
+import { useStore } from "zustand";
+import { useLocationStore } from "@/store";
 
 const RiderList = [
   {
@@ -120,6 +118,33 @@ const RiderList = [
 
 const Home = () => {
   const { session, signOut } = useSession();
+  const { setUserLocation } = useLocationStore();
+  const [permisson, setPermisson] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setPermisson(false);
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+
+      const address = await Location.reverseGeocodeAsync({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
+
+      setUserLocation({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        // latitude: 37.78825,
+        // longitude: -122.4324,
+        address: `${address[0].name} ${address[0].region}`,
+      });
+    })();
+  }, []);
 
   return (
     <SafeAreaView>

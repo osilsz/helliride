@@ -20,6 +20,8 @@ import point from "@/assets/icons/point.png";
 import profile from "@/assets/icons/profile.png";
 import search from "@/assets/icons/search.png";
 import selectedMarker from "@/assets/icons/selected-marker.png";
+import helliicone from "@/assets/icons/helli.png";
+// import selectedMarker from "@/assets/icons/adaptive-icon.png;
 import star from "@/assets/icons/star.png";
 import target from "@/assets/icons/target.png";
 import to from "@/assets/icons/to.png";
@@ -69,6 +71,7 @@ export const icons = {
   star,
   target,
   to,
+  helliicone,
 };
 
 export const onboarding = [
