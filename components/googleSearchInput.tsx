@@ -6,14 +6,22 @@ import {
   Text,
   TouchableOpacity,
   FlatList,
+  ScrollView,
+  Image,
 } from "react-native";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+// import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
-export default function GoogleSearchInput({ handlePress }: GoogleInputProps) {
+export default function GoogleSearchInput({
+  handlePress,
+  containerStyle,
+  initialLocation,
+  icon,
+}: GoogleInputProps) {
   const [searchText, setSearchText] = useState("");
   const [filterResult, setFilterResult] = useState([]);
 
   const handler = (searchText: string): void => {
+    setSearchText(searchText);
     if (searchText === "" || !searchText) {
       setFilterResult([]);
       return;
@@ -26,48 +34,41 @@ export default function GoogleSearchInput({ handlePress }: GoogleInputProps) {
   };
 
   // const handlePress = ({ latitude, longitude, address }) => {
-  //   return {
-  //     latitude :,
-  //     longitude :,
-  //     address :,
-  //   };
+  //   console.log(latitude, longitude, address);
+  //   return { latitude: latitude, longitude: longitude, address: address };
   // };
   return (
     <View className="my-3">
+      {icon && (
+        <Image source={icon} className=" w-[20] h-[20]" resizeMode="contain" />
+      )}
       <TextInput
         placeholder="Search Here"
-        className="w-full h-[50px] bg-white   rounded-full px-3 font-JakartaMedium text-md relative"
+        className={`w-full h-[50px]    rounded-full px-3 font-JakartaMedium text-md relative ${containerStyle ? containerStyle : "bg-white"}`}
         onChangeText={handler}
+        // value={initialLocation ? initialLocation : searchText}
+        defaultValue={initialLocation}
       />
       {filterResult?.length > 0 && (
-        <View className="bg-white  rounded-md p-3  absolute top-14 z-30">
+        <View className="bg-white  rounded-md p-3  absolute top-14 z-30 h-[230]">
           <FlatList
             data={filterResult}
-            renderItem={(result, place_id) => (
+            renderItem={({ item }, index) => (
               <TouchableOpacity
-                key={place_id}
-                onPress={() => handlePress(result)}
-                className="flex flex-row items-center  px-2 py-2 border-b-[0.3px] border-gray-300"
+                key={index} // Use a unique identifier for each item
+                onPress={() => {
+                  handlePress(item);
+                }}
+                className="flex flex-row items-center px-2 py-2 border-b-[0.3px] border-gray-300"
               >
-                <Text className=" font-JakartaMedium  text-lg">
-                  {result.address}
+                <Text className="font-JakartaMedium text-lg">
+                  {item.address}
                 </Text>
               </TouchableOpacity>
             )}
+            keyExtractor={(item, index) => index.toString()} // Use a unique identifier
+            showsVerticalScrollIndicator={true}
           />
-          {/* {filterResult?.map((result, place_id) => {
-            return (
-              <TouchableOpacity
-                key={place_id}
-                onPress={() => handlePress(result)}
-                className="flex flex-row items-center  px-2 py-2 border-b-[0.3px] border-gray-300"
-              >
-                <Text className=" font-JakartaMedium  text-lg">
-                  {result.address}
-                </Text>
-              </TouchableOpacity>
-            );
-          })} */}
         </View>
       )}
 

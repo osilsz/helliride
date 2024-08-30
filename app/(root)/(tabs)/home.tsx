@@ -8,6 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import * as Location from "expo-location";
 import { useStore } from "zustand";
 import { useLocationStore } from "@/store";
+import { router } from "expo-router";
 
 const RiderList = [
   {
@@ -118,7 +119,7 @@ const RiderList = [
 
 const Home = () => {
   const { session, signOut } = useSession();
-  const { setUserLocation } = useLocationStore();
+  const { setUserLocation, setDestinationLocation } = useLocationStore();
   const [permisson, setPermisson] = useState(false);
 
   useEffect(() => {
@@ -146,9 +147,23 @@ const Home = () => {
     })();
   }, []);
 
+  const handlerDestination = (item) => {
+    setDestinationLocation(item);
+
+    router.push(`/(root)/find-ride`);
+  };
+
   return (
     <SafeAreaView>
       {/* <Text>Home Screen {session}</Text> */}
+
+      <View className="mx-3">
+        <Text className="mt-2 font-JakartaBold  text-2xl">
+          Welcome , {session?.split("@")[0]} 👋
+        </Text>
+
+        <GoogleSearchInput handlePress={handlerDestination} />
+      </View>
 
       <FlatList
         data={RiderList}
@@ -161,16 +176,9 @@ const Home = () => {
         ListHeaderComponent={() => {
           return (
             <View className="mx-3">
-              <Text className="mt-2 font-JakartaBold  text-2xl">
-                Welcome , {session?.split("@")[0]} 👋
-              </Text>
-
-              <GoogleSearchInput />
-
               <Text className="mt-2 font-JakartaMedium  text-lg">
                 Your Current Location
               </Text>
-
               <View className="mt-3 h-[200px]">
                 <Map />
               </View>
